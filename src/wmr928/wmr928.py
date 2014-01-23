@@ -8,7 +8,7 @@
 import serial
 import array
 
-TTY = "/dev/ttyUSB0"
+#TTY = "/dev/ttyUSB0"
 
 wind_tag = "Anometer"
 rain_tag = "Rain Gauge"
@@ -18,7 +18,7 @@ indoor_tag = "Indoor Temp, Baro and Higro Gauge"
 
 class WMR928:
     
-    def __init__(self):     
+    def __init__(self, TTY):     
         self.ser = serial.Serial(port=TTY, baudrate=9600, bytesize=8, parity='N')
 	self.notFound = True
 	self.currentRain = 0
