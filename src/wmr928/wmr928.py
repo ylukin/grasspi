@@ -21,6 +21,9 @@ class WMR928:
     def __init__(self):     
         self.ser = serial.Serial(port=TTY, baudrate=9600, bytesize=8, parity='N')
 	self.notFound = True
+	self.currentRain = 0
+	self.totalRain = 0
+	self.windspeed = 0
         self.handlers = {0: self._doWind, # wind
                          1: self._doRain, # rain
                          2: self._doTH,
@@ -30,6 +33,15 @@ class WMR928:
                          6: self._doIndoorTempBaro, # Indoor Temp Baro
                          14: self._doMinute, # Minute
                          15: self._doClock} # Clock
+	self.dataType = {"Wind": 0,
+			 "CurrentRain": 1,
+			 "TotalRain": 1,
+			 "thermohygro": 2,
+			 "mushroom": 3,
+			 "thermo": 4,
+			 "thermohygrobaro": 5,
+			 "indoorthermohygrobaro": 6,
+			 "all": 999}
     
     #@log()
     def _doWind(self, code):
@@ -69,10 +81,11 @@ class WMR928:
         windchill = self._decodeBCD(frame[6]);
         if chillsign: windchill *= -1.0;
         
-        self._printMeasurements(["Wind:", avrover, gustover, dir, gustspeed, avrspeed, windchill])
-        
+        #self._printMeasurements(["Wind:", avrover, gustover, dir, gustspeed, avrspeed, windchill])
+	self.windspeed = avrspeed
+
     def _doRain(self, code):
-        len = 13 # rain frame + checksum
+	len = 13 # rain frame + checksum
         frame = self._getFrame(len)
         if not self._cksum(code, frame):
             print "Cheksum failed"
@@ -105,11 +118,13 @@ class WMR928:
         yesterdayover = False
         if (frame[0] & 0x80): yesterdayover = True
         
-        self._printMeasurements(["Rain", currentRain, totalRain, yesterdayRain, totalStartdate, rateover, totalover])
-     
+        #self._printMeasurements(["Rain", currentRain, totalRain, yesterdayRain, totalStartdate, rateover, totalover])
+        self.currentRain = currentRain
+	self.totalRain = totalRain
         
     def _doTH(self, code):
         """ """
+	print "Got TH"	
     
     def _doMushroom(self, code):
         """ Mushroom - Outdoor Thermo-Hygrometer """
@@ -143,10 +158,12 @@ class WMR928:
         
     def _doT(self, code):
         """ """
+	print "Got Temp"
         
     def _doTHB(self, code):
         """ """
-        
+	print "Got THB"        
+
     def _doIndoorTempBaro(self, code):
         len = 11
         frame = self._getFrame(len)
@@ -176,6 +193,7 @@ class WMR928:
                                  
     def _doClock(self, code):
         """ """
+	print "Got clock"
     
     def _readByte(self):    
         data = array.array('B', self.ser.read())
@@ -200,11 +218,26 @@ class WMR928:
         """ decode the packet """
         deviceCode = self._readByte()
 	if type == 999:
-		self.handlers[deviceCode](deviceCode)
+		return self.handlers[deviceCode](deviceCode)
 	else:
 	        if deviceCode == type:
+			self.notFound = False
 			self.handlers[deviceCode](deviceCode)
-        		self.notFound = False
+    def getData(self, type):
+	""" Get specific data values from sensors """
+
+	# keep reading incoming packets until response from desired sensor is received
+	while self.notFound:
+        	self.getStart()
+		self.decode(self.dataType[type])
+	if type == "CurrentRain":
+		return self.currentRain
+	elif type == "TotalRain":
+		return self.totalRain
+	elif type == "Wind":
+		return self.windspeed
+
+
     def _cksum(self, code, frame):
         """ calculate checksum """
         sum = code
