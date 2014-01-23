@@ -1,1 +1,12 @@
-grasspi
+You need to create a "config.cfg" file with the following variables:
+
+
+sample config.cfg:
+######################
+#! /usr/bin/env python
+
+TTY: '/dev/ttyUSB0'
+wunderground_api_key: '12345667890'
+my_zip_code: '12345'
+weather_provider: 'wmr928'
+######################
