@@ -3,6 +3,11 @@
 import urllib2 
 import json 
 import sys
+from config import Config
+
+config_file = file('config.cfg')
+cfg = Config(config_file)
+
 
 class Wunderground:
 	
@@ -10,22 +15,23 @@ class Wunderground:
 		self.api_key = api_key
 		self.zip_code = zip_code
 
-	def getData(self, type):
-
+	def getData(self):
+	
+		weather_data = {}
 		f = urllib2.urlopen('http://api.wunderground.com/api/' + self.api_key + '/geolookup/conditions/q/' + self.zip_code + '.json') 
 		json_string = f.read() 
 		parsed_json = json.loads(json_string) 
 		location = parsed_json['location']['city'] 
 		temp_f = parsed_json['current_observation']['temp_f'] 
-		rh = parsed_json['current_observation']['relative_humidity']
-		currentRain = parsed_json['current_observation']['precip_1hr_in']
-		totalRain = parsed_json['current_observation']['precip_today_in']
-		windspeed = parsed_json['current_observation']['wind_mph']	
+		weather_data['current_humidity'] = parsed_json['current_observation']['relative_humidity']
+		weather_data['current_rain'] = parsed_json['current_observation']['precip_1hr_in']
+		weather_data['total_rain'] = parsed_json['current_observation']['precip_today_in']
+		weather_data['current_wind_speed'] = parsed_json['current_observation']['wind_mph']	
 		f.close()
 
-		if type == 'CurrentRain':
-			return currentRain
-		elif type == 'TotalRain':
-			return totalRain
-		elif type == 'Wind':
-			return windspeed
+		for p in cfg.providers:
+			for key in p.keys():
+				if p.get(key) != "wunderground":
+					weather_data.pop(key, None)
+
+		return weather_data
