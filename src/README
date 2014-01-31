@@ -9,4 +9,18 @@ TTY: '/dev/ttyUSB0'
 wunderground_api_key: '12345667890'
 my_zip_code: '12345'
 weather_provider: 'wmr928'
+
+providers:
+[
+	{ current_rain : 'wmr928' },
+	{ total_rain : 'wmr928' },
+	{ current_wind_speed : 'wunderground' },
+	{ current_wind_direction : 'wunderground' },
+	{ current_humidity : 'wunderground' },
+	{ current_air_pressure : 'wunderground' },
+	{ current_shortwave_rad : 'wunderground' },
+	{ current_arm_rad : 'wunderground' },
+	{ day_length : 'wunderground' },
+	{ elevation : 'wunderground' },
+]
 ######################
