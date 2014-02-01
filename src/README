@@ -19,7 +19,7 @@ providers:
 	{ current_humidity : 'wunderground' },
 	{ current_air_pressure : 'wunderground' },
 	{ current_shortwave_rad : 'wunderground' },
-	{ current_arm_rad : 'wunderground' },
+	{ current_atm_rad : 'wunderground' },
 	{ day_length : 'wunderground' },
 	{ elevation : 'wunderground' },
 ]

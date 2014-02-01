@@ -16,8 +16,9 @@ class Wunderground:
 		self.zip_code = zip_code
 
 	def getData(self):
-	
 		weather_data = {}
+
+		# from json data and parse it
 		f = urllib2.urlopen('http://api.wunderground.com/api/' + self.api_key + '/geolookup/conditions/q/' + self.zip_code + '.json') 
 		json_string = f.read() 
 		parsed_json = json.loads(json_string) 
@@ -27,8 +28,13 @@ class Wunderground:
 		weather_data['current_rain'] = parsed_json['current_observation']['precip_1hr_in']
 		weather_data['total_rain'] = parsed_json['current_observation']['precip_today_in']
 		weather_data['current_wind_speed'] = parsed_json['current_observation']['wind_mph']	
+		weather_data['current_wind_direction'] = parsed_json['current_observation']['wind_dir']
+		weather_data['current_air_pressure'] = parsed_json['current_observation']['pressure_mb']
+		weather_data['elevation'] = parsed_json['current_observation']['display_location']['elevation']
 		f.close()
 
+		# iterate through data-to-provider mappings in config gile and remove any values
+		#   that are not from this provider
 		for p in cfg.providers:
 			for key in p.keys():
 				if p.get(key) != "wunderground":

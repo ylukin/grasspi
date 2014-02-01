@@ -26,7 +26,7 @@ def grasspi_create_db():
 
     # Create weatherdata table
     c.execute('''create table weatherdata
-    (provider text, date text, time text, current_rain real,total_rain real,
+    (date text, time text, current_rain real,total_rain real,
     current_wind_speed real, current_wind_direction text, current_humidity real,
     current_air_pressure real, current shortwave_rad real, current_atm_rad real,
     day_length real, elevation real)''')
@@ -43,14 +43,14 @@ def grasspi_create_db():
 def grasspi_add_db(row, table):
     conn = sqlite3.connect('grasspi.db')
     c = conn.cursor()
-    c.execute('insert into ' + table + ' values (?,?,?,?,?,?,?,?,?,?,?,?,?)',[row["provider"],row["date"],row["time"],
-    row["current_rain"],row["total_rain"],row["current_wind_speed"],row["current_wind_direction"],row["current_humidity"],
-    row["current_air_pressure"],row["current_shortwave_rad"],row["current_atm_rad"],row["day_length"],row["elevation"]])
+    c.execute('insert into ' + table + ' values (?,?,?,?,?,?,?,?,?,?,?,?)',[row["date"],row["time"],
+    row["current_rain"],row["total_rain"],row["current_wind_speed"],row["current_wind_direction"],
+    row["current_humidity"],row["current_air_pressure"],row["current_shortwave_rad"],
+    row["current_atm_rad"],row["day_length"],row["elevation"]])
     # Save (commit) the changes
     conn.commit()
     # We can also close the cursor if we are done with it
     c.close()
-    print 'db saved'
     
 def grasspi_print_db(table):
     conn = sqlite3.connect('grasspi.db')
