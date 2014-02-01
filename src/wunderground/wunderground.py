@@ -18,7 +18,7 @@ class Wunderground:
 	def getData(self):
 		weather_data = {}
 
-		# from json data and parse it
+		# grab json data and parse it
 		f = urllib2.urlopen('http://api.wunderground.com/api/' + self.api_key + '/geolookup/conditions/q/' + self.zip_code + '.json') 
 		json_string = f.read() 
 		parsed_json = json.loads(json_string) 
