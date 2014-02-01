@@ -33,7 +33,7 @@ class Wunderground:
 		weather_data['elevation'] = parsed_json['current_observation']['display_location']['elevation']
 		f.close()
 
-		# iterate through data-to-provider mappings in config gile and remove any values
+		# iterate through data-to-provider mappings in config file and remove any values
 		#   that are not from this provider
 		for p in cfg.providers:
 			for key in p.keys():
