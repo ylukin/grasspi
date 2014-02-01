@@ -21,9 +21,7 @@ class WMR928:
     def __init__(self, TTY):     
         self.ser = serial.Serial(port=TTY, baudrate=9600, bytesize=8, parity='N')
 	self.notFound = True
-	self.currentRain = 0
-	self.totalRain = 0
-	self.windspeed = 0
+	self.weather_data = {}
         self.handlers = {0: self._doWind, # wind
                          1: self._doRain, # rain
                          2: self._doTH,
@@ -33,9 +31,8 @@ class WMR928:
                          6: self._doIndoorTempBaro, # Indoor Temp Baro
                          14: self._doMinute, # Minute
                          15: self._doClock} # Clock
-	self.dataType = {"Wind": 0,
-			 "CurrentRain": 1,
-			 "TotalRain": 1,
+	self.dataType = {"wind": 0,
+			 "rain": 1,
 			 "thermohygro": 2,
 			 "mushroom": 3,
 			 "thermo": 4,
@@ -81,8 +78,8 @@ class WMR928:
         windchill = self._decodeBCD(frame[6]);
         if chillsign: windchill *= -1.0;
         
-        #self._printMeasurements(["Wind:", avrover, gustover, dir, gustspeed, avrspeed, windchill])
-	self.windspeed = avrspeed
+	self.weather_data['current_wind_speed'] = avrspeed
+	self.weather_data['current_wind_direction'] = dir
 
     def _doRain(self, code):
 	len = 13 # rain frame + checksum
@@ -118,9 +115,8 @@ class WMR928:
         yesterdayover = False
         if (frame[0] & 0x80): yesterdayover = True
         
-        #self._printMeasurements(["Rain", currentRain, totalRain, yesterdayRain, totalStartdate, rateover, totalover])
-        self.currentRain = currentRain
-	self.totalRain = totalRain
+	self.weather_data['current_rain'] = currentRain
+	self.weather_data['total_rain'] = totalRain
         
     def _doTH(self, code):
         """ """
@@ -223,20 +219,23 @@ class WMR928:
 	        if deviceCode == type:
 			self.notFound = False
 			self.handlers[deviceCode](deviceCode)
-    def getData(self, type):
-	""" Get specific data values from sensors """
+    def getSensorData(self, type):
+	""" Get specific data values from a sensor """
 
 	# keep reading incoming packets until response from desired sensor is received
 	while self.notFound:
         	self.getStart()
 		self.decode(self.dataType[type])
-	if type == "CurrentRain":
-		return self.currentRain
-	elif type == "TotalRain":
-		return self.totalRain
-	elif type == "Wind":
-		return self.windspeed
 
+    def getData(self):
+	""" Get weather data from all available sensors """
+
+	self.getSensorData('rain')
+	self.notFound = True
+	self.getSensorData('wind')
+	self.notFound = True
+
+	return self.weather_data
 
     def _cksum(self, code, frame):
         """ calculate checksum """

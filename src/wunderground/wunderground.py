@@ -35,7 +35,7 @@ class Wunderground:
 
 		# iterate through data-to-provider mappings in config file and remove any values
 		#   that are not from this provider
-		for p in cfg.providers:
+		for p in cfg.provider_map:
 			for key in p.keys():
 				if p.get(key) != "wunderground":
 					weather_data.pop(key, None)
