@@ -23,7 +23,7 @@ class Wunderground:
 		json_string = f.read() 
 		parsed_json = json.loads(json_string) 
 		location = parsed_json['location']['city'] 
-		temp_f = parsed_json['current_observation']['temp_f'] 
+		weather_data['current_temp'] = parsed_json['current_observation']['temp_c'] 
 		weather_data['current_humidity'] = parsed_json['current_observation']['relative_humidity']
 		weather_data['current_rain'] = parsed_json['current_observation']['precip_1hr_in']
 		weather_data['total_rain'] = parsed_json['current_observation']['precip_today_in']
