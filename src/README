@@ -8,9 +8,14 @@ sample config.cfg:
 TTY: '/dev/ttyUSB0'
 wunderground_api_key: '12345667890'
 my_zip_code: '12345'
-weather_provider: 'wmr928'
 
 providers:
+[
+	{ provider1 : 'wmr928' },
+	{ provider2 : 'wunderground' },
+]
+
+provider_map:
 [
 	{ current_rain : 'wmr928' },
 	{ total_rain : 'wmr928' },
