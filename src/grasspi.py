@@ -22,8 +22,9 @@ def initProvider(provider):
     
     return wp.getData()
 
-def getWeatherData(provider):
-    """ Get weather data from all providers and concat into dictionary """
+def getWeatherData():
+    """ Get weather data from all providers, temporarily store into dictionary,
+	and return the dictionary """
 
     weather_data = {}
 
@@ -48,11 +49,12 @@ def main():
 
     # check if database already exists, if not, then create it
     if not isSQLite3('grasspi.db'):
-	grasspi_create_db()
+	grasspi_create_db('weatherdata', cfg.weatherdata_schema)
+	grasspi_create_db('wateringschedule', cfg.wateringschedule_schema)
 
     # get weather data from all providers and store in DB
-    myWeatherData = getWeatherData("wunderground")
-    grasspi_add_db(myWeatherData,'weatherdata')
+    myWeatherData = getWeatherData()
+    grasspi_add_db('weatherdata',myWeatherData)
     grasspi_print_db('weatherdata')
 
 if __name__ == "__main__":
