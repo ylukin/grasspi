@@ -3,11 +3,7 @@
 import urllib2 
 import json 
 import sys
-from config import Config
-
-config_file = file('config.cfg')
-cfg = Config(config_file)
-
+from grasspi import grasspi_config
 
 class Wunderground:
 	
@@ -35,7 +31,7 @@ class Wunderground:
 
 		# iterate through data-to-provider mappings in config file and remove any values
 		#   that are not from this provider
-		for p in cfg.provider_map:
+		for p in grasspi_config.cfg.provider_map:
 			for key in p.keys():
 				if p.get(key) != "wunderground":
 					weather_data.pop(key, None)

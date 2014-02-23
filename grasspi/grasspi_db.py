@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import sqlite3
 import datetime
+from grasspi import grasspi_config
 
 def isSQLite3(filename):
     """ Check if database file already exists and is in valid SQLite3 format """
@@ -23,7 +24,7 @@ def isSQLite3(filename):
 def grasspi_create_db(table_name, schema):
     """ Create database file and table given the table schema """
 
-    conn = sqlite3.connect('grasspi.db')
+    conn = sqlite3.connect(grasspi_config.cfg.db_file)
     c = conn.cursor()
     # Create table
     str = "CREATE TABLE if not exists " + table_name + " " + schema
@@ -35,7 +36,7 @@ def grasspi_create_db(table_name, schema):
 def grasspi_add_db(table_name,row):
     """ Adds an entry to database given table name and row of values """
 
-    conn = sqlite3.connect('grasspi.db')
+    conn = sqlite3.connect(grasspi_config.cfg.db_file)
     c = conn.cursor()
     if table_name == "weatherdata":
 	c.execute('INSERT INTO ' + table_name + ' values (?,?,?,?,?,?,?,?,?,?,?,?,?)',[row["date"],row["time"],
@@ -53,7 +54,7 @@ def grasspi_add_db(table_name,row):
 def grasspi_print_db(table_name):
     """ Print contents of database table """
 
-    conn = sqlite3.connect('grasspi.db')
+    conn = sqlite3.connect(grasspi_config.cfg.db_file)
     conn.text_factory = str
     c = conn.cursor()
     val = "SELECT * FROM " + table_name
@@ -66,7 +67,7 @@ def grasspi_query_db(table_name,query,value):
     """ Query the database given table name, query column and value """
 
     query_entries = []
-    conn = sqlite3.connect('grasspi.db')
+    conn = sqlite3.connect(grasspi_config.cfg.db_file)
     conn.text_factory = str
     c = conn.cursor()
     val = "SELECT * FROM " + table_name + ' WHERE '+ query +' = '+"'" + value +"'"
@@ -78,7 +79,7 @@ def grasspi_query_db(table_name,query,value):
 def grasspi_delete_entries(table_name,query,value):
     """ Query database given table name, query column and value and delete entries """
 
-    conn = sqlite3.connect('grasspi.db')
+    conn = sqlite3.connect(grasspi_config.cfg.db_file)
     c = conn.cursor()
     val = "SELECT * FROM " + table_name
     c.execute(val)
@@ -94,7 +95,7 @@ def grasspi_delete_db(table_name):
     """ Delete the database """
 
     sql = 'drop table IF EXISTS ' + table_name
-    conn = sqlite3.connect('grasspi.db')
+    conn = sqlite3.connect(grasspi_config.cfg.db_file)
     c = conn.cursor()
     c.execute(sql)
     conn.commit()
