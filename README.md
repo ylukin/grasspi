@@ -20,6 +20,9 @@ This will
 Configuration
 -------------
 
+Initial implementation of grasspi relies on Weatherunderground API for weather data. You'll need an API key, you can sign up here (it's free) if you don't already have one:
+http://www.wunderground.com/weather/api/
+
 Run the following to initialize environment before running main program::
 
     grasspi_initial_config.py
