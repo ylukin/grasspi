@@ -20,7 +20,9 @@ This will
 Configuration
 -------------
 
-You need to run "grasspi_initial_config.py" before running the main program.
+Run the following to initialize environment before running main program::
+
+    grasspi_initial_config.py
 
 Add the following to your crontab to run the main program periodically::
 
