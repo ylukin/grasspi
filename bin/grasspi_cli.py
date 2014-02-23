@@ -3,10 +3,6 @@
 import sys
 import datetime
 import grasspi
-#from config import Config
-
-#config_file = file('/etc/grasspi/config.cfg')
-#cfg = Config(config_file)
 
 def initProvider(provider):
     """ Initialize provider class and return weather data from it """
