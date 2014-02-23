@@ -14,3 +14,9 @@ if __name__ == "__main__":
 		grasspi_config.addConfigParameter('my_zip_code', zip_code)
 	else:
 		print "Zip code must be 5 digits"
+	# prompt for wunderground api key
+	wu_api_key = raw_input("Enter Weather Underground API Key: ")
+	if re.match('^[\w-]+$', wu_api_key):
+		grasspi_config.addConfigParameter('wunderground_api_key', wu_api_key)
+	else:
+		print "API Key can only be alphanumeric"
