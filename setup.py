@@ -13,6 +13,7 @@ setup(name='grasspi',
 	  'pyserial',
 	  'smbus-cffi',
       ],
-      scripts=['bin/grasspi_cli.py'],
+      scripts=['bin/grasspi_cli.py', 'bin/grasspi_initial_config.py'],
       include_package_data=True,
+      data_files=[('/etc/grasspi',['cfg/config.cfg'])],
       zip_safe=False)

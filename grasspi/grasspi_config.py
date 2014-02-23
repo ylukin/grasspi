@@ -2,9 +2,9 @@
 
 from config import *
 
-
-config_file = file('/etc/grasspi/config.cfg')
-cfg = Config(config_file)
+config_file = '/etc/grasspi/config.cfg'
+myConfig = file(config_file)
+cfg = Config(myConfig)
 
 def addConfigParameter(param_name, value):
 	""" Add a new global parameter of type 'parameter : value' to config file, 
@@ -73,4 +73,3 @@ def modifyProviderMapping(param_name, provider):
 	f = file(config_file, 'w')
         cfg.save(f)
 	
-
