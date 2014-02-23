@@ -4,9 +4,6 @@ import re
 from config import *
 from grasspi import grasspi_config
 
-config_directory = '/etc/grasspi'
-config_file = '/etc/grasspi/config.cfg'
-
 if __name__ == "__main__":
 	# prompt for zip code
 	zip_code = raw_input("Enter your 5 digit zip code: ")
