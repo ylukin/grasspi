@@ -40,4 +40,9 @@ To remove grasspi, you can use pip::
     sudo rm /usr/local/bin/grasspi_cli.py
     sudo rm -rf /etc/grasspi
 
+TODO
+--------------
+
+* Add Web UI
+* Implement support for additional weather data providers (module included for Oregon Scientific WMR928 but is currently not enabled)
 	
