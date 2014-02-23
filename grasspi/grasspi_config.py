@@ -3,15 +3,15 @@
 from config import *
 
 
-f = file('config.cfg')
-cfg = Config(f)
+config_file = file('/etc/grasspi/config.cfg')
+cfg = Config(config_file)
 
 def addConfigParameter(param_name, value):
 	""" Add a new global parameter of type 'parameter : value' to config file, 
 	overwrite existing value if it already exists """
 
 	cfg.addMapping(param_name, value, None, True)
-	f = file('config.cfg', 'w')
+	f = file(config_file, 'w')
 	cfg.save(f)
 
 def delConfigParameter(param_name):
@@ -19,7 +19,7 @@ def delConfigParameter(param_name):
 
 	try:
 		cfg.__delitem__(param_name)
-		f = file('config.cfg', 'w')
+		f = file(config_file, 'w')
 		cfg.save(f)
 	except AttributeError:
 		print "Global parameter " + param_name + " not found in config file"
@@ -31,7 +31,7 @@ def addProvider(provider):
 	newProvider = Mapping()
 	newProvider.addMapping('provider',provider,None,True)
 	cfg.providers.append(newProvider,'')
-	f = file('config.cfg', 'w')
+	f = file(config_file, 'w')
 	cfg.save(f)
 
 def delProvider(provider):
@@ -41,7 +41,7 @@ def delProvider(provider):
 		for key in p.keys():
 			if p.get(key) == provider:
 				p.__delitem__('provider')
-	f = file('config.cfg', 'w')
+	f = file(config_file, 'w')
 	cfg.save(f)
 
 def modifyProviderMapping(param_name, provider):
@@ -70,7 +70,7 @@ def modifyProviderMapping(param_name, provider):
 	elif param_name == "elevation":
                 cfg.provider_map[10].elevation = provider
 
-	f = file('config.cfg', 'w')
+	f = file(config_file, 'w')
         cfg.save(f)
 	
 
