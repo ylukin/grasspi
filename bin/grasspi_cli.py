@@ -36,6 +36,16 @@ def getWeatherData():
 			weather_data[key] = 0
     return weather_data	
 
+def schedule_zone(zonenumber):
+    zonesched = grasspi.grasspi_db.grasspi_query_db('wateringschedule','zonenumber',str(zonenumber))
+    start_hour = zonesched[0][1][0:2]
+    start_minute = zonesched[0][1][3:5]
+    duration = zonesched[0][2]
+    startTime = datetime.datetime.now().replace(hour=int(start_hour), minute=int(start_minute), second=0)
+    currentTime = datetime.datetime.now()
+    if (currentTime - startTime) < datetime.timedelta (minutes = 6) and (currentTime > startTime):
+	print "Scheduling zone " + str(zonenumber) + " for " + str(duration) + " minutes"
+
 def main():
     """ gather weather data and store it in DB """
 
@@ -47,7 +57,10 @@ def main():
     # get weather data from all providers and store in DB
     myWeatherData = getWeatherData()
     grasspi.grasspi_db.grasspi_add_db('weatherdata',myWeatherData)
-    grasspi.grasspi_db.grasspi_print_db('weatherdata')
+
+    # check all zone schedules and run them if it's time to water
+    for i in range(1,grasspi.grasspi_config.cfg.num_zones+1):
+	schedule_zone(i)
 
 if __name__ == "__main__":
     main()

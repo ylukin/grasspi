@@ -36,16 +36,18 @@ def grasspi_create_db(table_name, schema):
 def grasspi_add_db(table_name,row):
     """ Adds an entry to database given table name and row of values """
 
-    conn = sqlite3.connect(grasspi_config.cfg.db_file)
-    c = conn.cursor()
     if table_name == "weatherdata":
+	conn = sqlite3.connect(grasspi_config.cfg.db_file)
+    	c = conn.cursor()
 	c.execute('INSERT INTO ' + table_name + ' values (?,?,?,?,?,?,?,?,?,?,?,?,?)',[row["date"],row["time"],
     	row["current_temp"],row["current_rain"],row["total_rain"],row["current_wind_speed"],
     	row["current_wind_direction"],row["current_humidity"],row["current_air_pressure"],
     	row["current_shortwave_rad"],row["current_atm_rad"],row["day_length"],row["elevation"]])
     elif table_name == "wateringschedule":
-	c.execute('INSERT INTO ' + table_name + ' values (?,?,?,?)',[row["zonenumber"],row["date"],
-	row["time"],row["length"]])
+	conn = sqlite3.connect(grasspi_config.cfg.db_file, detect_types=sqlite3.PARSE_DECLTYPES|sqlite3.PARSE_COLNAMES)
+    	c = conn.cursor()
+	c.execute('INSERT INTO ' + table_name + ' values (?,?,?)',[row["zonenumber"],
+	row["starttime"],row["duration"]])
     # Save (commit) the changes
     conn.commit()
     # We can also close the cursor if we are done with it
